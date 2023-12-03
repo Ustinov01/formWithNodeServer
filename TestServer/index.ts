@@ -1,9 +1,14 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
+
+interface DataItem {
+  email: string;
+  number: string;
+}
 
 const port = 4444;
 
-const data = [
+const data: DataItem[] = [
   {
     email: "jim@gmail.com",
     number: "221122",
@@ -39,18 +44,18 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-let currentRequest = null;
+let currentRequest: NodeJS.Timeout | null = null;
 
-app.post("/search", (req, res) => {
+app.post("/search", (req: Request, res: Response) => {
   try {
     if (currentRequest) {
       clearTimeout(currentRequest);
     }
 
-    const { email, number } = req.body;
+    const { email, number }: { email: string; number?: string } = req.body;
 
     currentRequest = setTimeout(() => {
-      let results = data;
+      let results: DataItem[] = data;
 
       results = results.filter((item) => item.email === email);
 
